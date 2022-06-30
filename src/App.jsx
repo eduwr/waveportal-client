@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { ethers } from "ethers";
 import './App.css';
+import abi from "./utils/WavePortal.json";
 
 export default function App() {
+  const contractAddress = "0xDC29182a1F36565436ea9a8d0E5F2157671f2B73";
+  const contractABI = abi.abi
   
   /*
   * Just a state variable we use to store our user's public wallet.
@@ -68,8 +71,35 @@ export default function App() {
   }, [])
 
   
-  const wave = () => {
-    
+  const wave = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        let count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", count.toNumber());
+
+        /*
+        * Execute the actual wave from your smart contract
+        */
+        const waveTxn = await wavePortalContract.wave();
+        console.log("Mining...", waveTxn.hash);
+
+        await waveTxn.wait();
+        console.log("Mined -- ", waveTxn.hash);
+
+        count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", count.toNumber());
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   
   return (
@@ -87,10 +117,13 @@ export default function App() {
         <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
-        <button className="waveButton" onClick={connectWallet}>
-         Connect Wallet
-        </button>
+        {!currentAccount && (
+          <button className="waveButton" onClick={connectWallet}>
+           Connect Wallet
+          </button>)
+        }
       </div>
     </div>
   );
 }
+
