@@ -9,7 +9,7 @@ const WaveContext = createContext({});
 
 export const WaveProvider = ({children}) => {
   const contractABI = abi.abi;
-  const contractAddress = "0x045aD8a85fa1C04e2984C51F732aa1099152b208";
+  const contractAddress = "0xBf69e200a0DF586a9910Bd60a89ef56eDCA7301e";
 
   const [waveMessage, setWaveMessage] = useState("");
   const [showWaveDialog, setShowWaveDialog] = useState(false);
@@ -32,7 +32,9 @@ export const WaveProvider = ({children}) => {
       /*
       * Execute the actual wave from your smart contract
       */
-      const waveTxn = await wavePortalContract.wave(waveMessage);
+      const waveTxn = await wavePortalContract.wave(
+        waveMessage, { gasLimit: 300000 }
+      );
       console.log("Mining...", waveTxn.hash);
 
       setLoading(true);
