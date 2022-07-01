@@ -26,7 +26,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(5px);
   animation: fadein 0.5s;
 }
 
@@ -39,10 +39,14 @@
   width: 30rem;
   border-radius: 3rem;
   padding: 2rem;
-  background:  #3C445C;
   display: flex;
   flex-direction: column;
-  align-items: "center"
+  align-items: "center";
+  background: 
+    linear-gradient(#3C445C88, #3C445C88) padding-box,
+    linear-gradient(to bottom right, #FFFFFFAA, #3C445CAA) border-box;
+  border-radius: 3rem;
+  border: 2px solid transparent;
 }
 
 

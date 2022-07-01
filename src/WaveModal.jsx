@@ -16,7 +16,7 @@ export const WaveModal = ({
           ) : (
           <>
             <h3>Hooray...</h3>
-            <p>Send your wave message!</p>
+            <p>Send me some message!</p>
           </>
           )}
         <input
