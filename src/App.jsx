@@ -11,7 +11,7 @@ function App() {
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves , setAllWaves] = useState([]);
  
-  const {contractAddress, contractABI, handleWaves } = useWave()
+  const {contractAddress, contractABI, handleWaves, loading } = useWave()
 
   const connectWallet = async () => {
     try {
@@ -94,7 +94,7 @@ function App() {
  
   useEffect(() => {
       checkIfWalletIsConnected();
-  }, [])
+  }, [loading])
 
   return (
 

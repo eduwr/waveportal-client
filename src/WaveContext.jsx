@@ -13,7 +13,7 @@ export const WaveProvider = ({children}) => {
 
   const [waveMessage, setWaveMessage] = useState("");
   const [showWaveDialog, setShowWaveDialog] = useState(false);
-
+  const [loading, setLoading] = useState(false);
 
   const wave = async () => {
     try {
@@ -23,23 +23,30 @@ export const WaveProvider = ({children}) => {
         console.log("Ethereum object doesn't exist!");
         return;
       }
-      
+
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
+      
       /*
       * Execute the actual wave from your smart contract
       */
       const waveTxn = await wavePortalContract.wave(waveMessage);
       console.log("Mining...", waveTxn.hash);
 
+      setLoading(true);
+      
       await waveTxn.wait();
       console.log("Mined -- ", waveTxn.hash);
    
     } catch (error) {
       console.log(error);
     }
+
+    setLoading(false);
+    setShowWaveDialog(false);
+          
   }
 
   const handleWaves = () => {
@@ -51,13 +58,15 @@ export const WaveProvider = ({children}) => {
       value={{
         contractABI,
         contractAddress,
-        handleWaves
+        handleWaves,
+        loading
     }}>
       { showWaveDialog && (
         <WaveModal
           setWaveMessage={setWaveMessage}
           setShowWaveDialog={setShowWaveDialog}
           wave={wave}
+          loading={loading}
         />
         )
       }

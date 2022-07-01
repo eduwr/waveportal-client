@@ -21,7 +21,7 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-   background: #0e1525A0;
+  background: #0e1525A0;
   top: 0;
   left: 0;
   right: 0;
@@ -42,7 +42,9 @@
   background:  #3C445C;
   display: flex;
   flex-direction: column;
+  align-items: "center"
 }
+
 
 .modal-card h3 {
   color: white;
@@ -73,6 +75,10 @@
   opacity: 1;
 }
 
+.modal-card input:disabled {
+  opacity: 0.8;
+}
+
 .modal-card .btn-wrapper {
   display: flex;
   justify-content: flex-end;
@@ -95,6 +101,10 @@
 
 .modal-card .btn-wrapper button:hover {
   opacity: 1;
+}
+
+.modal-card .btn-wrapper button:disabled {
+  opacity: 0.8;
 }
 
 .modal-card .btn-wrapper button:first-child {
