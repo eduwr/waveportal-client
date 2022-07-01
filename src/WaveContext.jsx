@@ -9,7 +9,7 @@ const WaveContext = createContext({});
 
 export const WaveProvider = ({children}) => {
   const contractABI = abi.abi;
-  const contractAddress = "0xBf69e200a0DF586a9910Bd60a89ef56eDCA7301e";
+  const contractAddress = "0x02ef2422dabBaA01a576C56Ef2BB7A753de73c71";
 
   const [waveMessage, setWaveMessage] = useState("");
   const [showWaveDialog, setShowWaveDialog] = useState(false);
