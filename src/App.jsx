@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from "react";
 import { ethers } from "ethers";
 import './App.css';
-import abi from "./utils/WavePortal.json";
+import {WaveProvider, useWave} from './WaveContext';
 
-export default function App() {
-  const contractAddress = "0xDC29182a1F36565436ea9a8d0E5F2157671f2B73";
-  const contractABI = abi.abi
-  
-  /*
-  * Just a state variable we use to store our user's public wallet.
-  */
+
+
+
+function App() {
+
   const [currentAccount, setCurrentAccount] = useState("");
-  const [waveCount , setWaveCount] = useState(0);
+  const [allWaves , setAllWaves] = useState([]);
+ 
+  const {contractAddress, contractABI, handleWaves } = useWave()
+
+  console.log({
+    contractAddress, contractABI, handleWaves
+  })
   
-  /**
-  * Implement your connectWallet method here
-  */
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
@@ -41,9 +42,10 @@ export default function App() {
       if (!ethereum) {
         console.log("Make sure you have metamask!");
         return;
-      } else {
-        console.log("We have the ethereum object", ethereum);
       }
+      
+      console.log("We have the ethereum object", ethereum);
+      
 
       /*
       * Check if we're authorized to access the user's wallet
@@ -54,45 +56,51 @@ export default function App() {
         const account = accounts[0];
         console.log("Found an authorized account:", account);
         setCurrentAccount(account)
-      } else {
-        console.log("No authorized account found")
+        getAllWaves()
+        return;
       }
+      
+      console.log("No authorized account found")
+    
     } catch (error) {
       console.log(error);
     }
 
   }
 
-  const getWaveCount = async () => {
-   try {
+  const getAllWaves = async () => {
+    try {
       const { ethereum } = window;
-
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        let count = await wavePortalContract.getTotalWaves();
-        console.log("Retrieved total wave count...", count.toNumber());
+        const waves = await wavePortalContract.getAllWaves();
 
-        setWaveCount(count.toNumber())
+        let wavesCleaned = [];
+        waves.forEach(wave => {
+          wavesCleaned.push({
+            address: wave.waver,
+            timestamp: new Date(wave.timestamp * 1000),
+            message: wave.message
+          });
+        });
+
+        setAllWaves(wavesCleaned);
       } else {
-        console.log("Ethereum object doesn't exist!");
+        console.log("Ethereum object doesn't exist!")
       }
     } catch (error) {
       console.log(error);
     }
   }
  
-  /*
-  * This runs our function when the page loads.
-  */
   useEffect(() => {
-    checkIfWalletIsConnected();
-    getWaveCount() 
+      checkIfWalletIsConnected();
   }, [])
 
-  
+
   const wave = async () => {
     try {
       const { ethereum } = window;
@@ -128,32 +136,45 @@ export default function App() {
   }
   
   return (
-    <div className="mainContainer">
 
-      <div className="dataContainer">
-        <div className="header">
-        👋 Hello!
+      <div className="mainContainer">
+        <div className="dataContainer">
+          <div className="header">
+          👋 Hello!
+          </div>
+  
+          <div className="bio">
+          I am Eduardo and I worked on chemistry labs so that's pretty cool right? Connect your Ethereum wallet and wave at me!
+          </div>
+  
+          <button className="waveButton" onClick={handleWaves}>
+            Wave at Me
+          </button>
+          {!currentAccount && (
+            <button className="waveButton" onClick={connectWallet}>
+             Connect Wallet
+            </button>)
+          }
+  
+           {allWaves.map((wave, index) => {
+            return (
+              <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+                <div>Address: {wave.address}</div>
+                <div>Time: {wave.timestamp.toString()}</div>
+                <div>Message: {wave.message}</div>
+              </div>)
+          })}
         </div>
-
-        <div className="bio">
-        I am Eduardo and I worked on chemistry labs so that's pretty cool right? Connect your Ethereum wallet and wave at me!
-        </div>
-
-        <button className="waveButton" onClick={wave}>
-          Wave at Me
-        </button>
-        {!currentAccount && (
-          <button className="waveButton" onClick={connectWallet}>
-           Connect Wallet
-          </button>)
-        }
-
-        <div className="bio">
-          <p>Wave count: {waveCount} 👋</p>
-        </div>
+ 
       </div>
-      
-    </div>
+ 
   );
 }
 
+export default function Wrapper() {
+  return (
+    <WaveProvider>
+      <App />
+    </WaveProvider>
+  )
+}
