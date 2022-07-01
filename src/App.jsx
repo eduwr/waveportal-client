@@ -11,7 +11,8 @@ export default function App() {
   * Just a state variable we use to store our user's public wallet.
   */
   const [currentAccount, setCurrentAccount] = useState("");
-
+  const [waveCount , setWaveCount] = useState(0);
+  
   /**
   * Implement your connectWallet method here
   */
@@ -62,12 +63,33 @@ export default function App() {
 
   }
 
+  const getWaveCount = async () => {
+   try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        let count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", count.toNumber());
+
+        setWaveCount(count.toNumber())
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
  
   /*
   * This runs our function when the page loads.
   */
   useEffect(() => {
     checkIfWalletIsConnected();
+    getWaveCount() 
   }, [])
 
   
@@ -83,6 +105,8 @@ export default function App() {
         let count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", count.toNumber());
 
+        setWaveCount(count.toNumber())
+
         /*
         * Execute the actual wave from your smart contract
         */
@@ -94,6 +118,7 @@ export default function App() {
 
         count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", count.toNumber());
+        setWaveCount(count.toNumber())
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -122,7 +147,12 @@ export default function App() {
            Connect Wallet
           </button>)
         }
+
+        <div className="bio">
+          <p>Wave count: {waveCount} 👋</p>
+        </div>
       </div>
+      
     </div>
   );
 }
