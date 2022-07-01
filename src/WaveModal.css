@@ -1,0 +1,104 @@
+@keyframes fadein {
+	from {
+		opacity:0;
+	}
+	to {
+		opacity:1;
+	}
+}
+
+@keyframes fadeout {
+  	from {
+		opacity:1;
+	}
+	to {
+		opacity:0;
+	}
+}
+
+.modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+   background: #0e1525A0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(2px);
+  animation: fadein 0.5s;
+}
+
+.modal-container.visible {
+  animation: fadeout 0.5s;
+}
+
+
+.modal-card {
+  width: 30rem;
+  border-radius: 3rem;
+  padding: 2rem;
+  background:  #3C445C;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-card h3 {
+  color: white;
+}
+
+.modal-card p {
+  color: #e5e5e5
+}
+
+.modal-card input {
+  height: 2rem;
+  border-radius: 0.5rem;
+  outline: none;
+  border: none;
+  background: #ffffffE0;
+  margin: 0.5rem 0;
+  padding: 0 0.5rem;
+  opacity: 0.8;
+  transition: opacity 300ms ease;
+  color: #0E1525;
+}
+
+.modal-card input:focus {
+  opacity: 1;
+}
+
+.modal-card input:hover {
+  opacity: 1;
+}
+
+.modal-card .btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-card .btn-wrapper button {
+  height: 2rem;
+  border-radius: 0.5rem;
+  outline: none;
+  border: none;
+  padding: 0 2rem;
+  margin-left: 0.5rem;
+  background: #ffffffE0;
+  color: #0E1525;
+  font-weight: bold;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  transition: opacity 300ms ease;
+}
+
+.modal-card .btn-wrapper button:hover {
+  opacity: 1;
+}
+
+.modal-card .btn-wrapper button:first-child {
+  border: 2px solid #ffffffE0;
+  background: none;
+  color: #ffffffE0;
+}

@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import { ethers } from "ethers";
 import './App.css';
 import abi from "./utils/WavePortal.json";
-
+import {WaveModal} from './WaveModal'
 
 const WaveContext = createContext({});
 
@@ -43,7 +43,6 @@ export const WaveProvider = ({children}) => {
   }
 
   const handleWaves = () => {
-    console.log("HANDLING WAVES")
     return setShowWaveDialog(true);
   }
 
@@ -55,23 +54,11 @@ export const WaveProvider = ({children}) => {
         handleWaves
     }}>
       { showWaveDialog && (
-        <div>
-          <input
-            onChange={e => setWaveMessage(e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={e => setShowWaveDialog(false)}  
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={wave}  
-          >
-            Submit
-          </button>
-        </div>
+        <WaveModal
+          setWaveMessage={setWaveMessage}
+          setShowWaveDialog={setShowWaveDialog}
+          wave={wave}
+        />
         )
       }
       {children}
